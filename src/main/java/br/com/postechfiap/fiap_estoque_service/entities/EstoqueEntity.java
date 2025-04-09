@@ -1,12 +1,12 @@
 package br.com.postechfiap.fiap_estoque_service.entities;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
-@Setter
 @EqualsAndHashCode(callSuper = false)
 @ToString
 @Builder(toBuilder = true)
@@ -17,6 +17,17 @@ public class EstoqueEntity extends BaseEntity<Long> {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
     @SequenceGenerator(name = "sequenceGenerator", sequenceName = "estoque_id_seq",allocationSize = 1)
     private Long id;
+
+    @Setter
+    @NotBlank(message = "O nome do produto é obrigatório.")
+    @Column(nullable = false)
     private String nome;
+
+    @Setter
+    @Column(nullable = false)
+    private String sku;
+
+    @Setter
+    @Column(nullable = false)
     private Long quantidade;
 }
