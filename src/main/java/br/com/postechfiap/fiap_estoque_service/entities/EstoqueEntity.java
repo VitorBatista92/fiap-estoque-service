@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
+import java.util.UUID;
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
@@ -24,10 +26,12 @@ public class EstoqueEntity extends BaseEntity<Long> {
     private String nome;
 
     @Setter
-    @Column(nullable = false)
+    @NotBlank(message = "O nome do produto é obrigatório.")
+    @Column(nullable = false, unique = true, updatable = false)
     private String sku;
 
     @Setter
     @Column(nullable = false)
     private Long quantidade;
+
 }

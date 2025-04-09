@@ -19,6 +19,7 @@ public class CadastrarEstoqueUseCaseImpl implements CadastrarEstoqueUseCase {
         long i = 0;
         var estoque = EstoqueEntity.builder()
                 .nome(entry.nome())
+                .sku(entry.sku())
                 .quantidade(i)
                 .build();
 
@@ -27,6 +28,7 @@ public class CadastrarEstoqueUseCaseImpl implements CadastrarEstoqueUseCase {
         return  new EstoqueResponse(
                 estoque.getId(),
                 estoque.getNome(),
+                estoque.getSku(),
                 estoque.getQuantidade()
         );
     }

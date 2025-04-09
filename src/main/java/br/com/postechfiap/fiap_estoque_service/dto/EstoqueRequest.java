@@ -9,6 +9,7 @@ import jakarta.validation.constraints.NotNull;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public record EstoqueRequest(
-        @NotBlank String nome
+        @NotBlank String nome,
+        @NotBlank String sku
         ) {
 }

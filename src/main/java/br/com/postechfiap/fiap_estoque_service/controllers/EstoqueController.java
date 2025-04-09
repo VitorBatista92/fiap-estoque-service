@@ -33,6 +33,7 @@ public class EstoqueController {
     @Operation(summary = "Cadastra estoque", description = "Cadastra novo estoque")
     public ResponseEntity<EstoqueResponse> create(@Valid @RequestBody EstoqueRequest estoqueRequest) {
         var novoEstoque = cadastrarEstoque.execute(estoqueRequest);
+
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
                 .path("/{id}")

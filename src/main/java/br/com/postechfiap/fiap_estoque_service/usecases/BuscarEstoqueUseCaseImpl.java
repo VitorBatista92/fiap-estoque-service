@@ -23,6 +23,7 @@ public class BuscarEstoqueUseCaseImpl implements BuscarEstoqueUseCase {
                         estoqueEntity -> new EstoqueResponse(
                                 estoqueEntity.getId(),
                                 estoqueEntity.getNome(),
+                                estoqueEntity.getSku(),
                                 estoqueEntity.getQuantidade()
                         )
                 ).collect(Collectors.toList());
