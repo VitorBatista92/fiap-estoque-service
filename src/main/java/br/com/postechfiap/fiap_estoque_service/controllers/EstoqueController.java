@@ -8,6 +8,7 @@ import br.com.postechfiap.fiap_estoque_service.interfaces.EstoqueRepository;
 import br.com.postechfiap.fiap_estoque_service.interfaces.usecases.AtualizarEstoqueUseCase;
 import br.com.postechfiap.fiap_estoque_service.interfaces.usecases.BuscarEstoqueUseCase;
 import br.com.postechfiap.fiap_estoque_service.interfaces.usecases.CadastrarEstoqueUseCase;
+import br.com.postechfiap.fiap_estoque_service.interfaces.usecases.DeletarEstoqueUseCase;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -30,6 +31,7 @@ public class EstoqueController {
     private final CadastrarEstoqueUseCase cadastrarEstoque;
     private final BuscarEstoqueUseCase buscarEstoque;
     private final AtualizarEstoqueUseCase atualizarEstoque;
+    private final DeletarEstoqueUseCase deletarEstoque;
 
     // C
     @PostMapping
@@ -66,5 +68,10 @@ public class EstoqueController {
         return  ResponseEntity.ok(novoEstoque);
     }
     // D
-
+    @DeleteMapping("/{sku}")
+    @Operation(summary = "Deleta um Estoque", description = "Deleta um item do estoque")
+    public ResponseEntity<String> delete(@PathVariable String sku) {
+        String mensagem =deletarEstoque.execute(sku);
+        return ResponseEntity.ok(mensagem);
+    }
 }
