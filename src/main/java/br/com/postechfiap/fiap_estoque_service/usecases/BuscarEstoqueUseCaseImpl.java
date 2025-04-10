@@ -17,7 +17,7 @@ public class BuscarEstoqueUseCaseImpl implements BuscarEstoqueUseCase {
 
     @Override
     public ListaEstoqueResponse execute(String query){
-        List<EstoqueResponse> estoques = repository.findByNomeContainingIgnoreCase(query)
+        List<EstoqueResponse> estoques = repository.findByNomeContainingIgnoreCaseOrSkuIgnoreCase(query,query)
                 .stream()
                 .map(
                         estoqueEntity -> new EstoqueResponse(

@@ -7,4 +7,6 @@ import java.util.List;
 
 public interface EstoqueRepository extends JpaRepository<EstoqueEntity, Long> {
     List<EstoqueEntity> findByNomeContainingIgnoreCase(String nome);
+    EstoqueEntity findBySku(String sku);
+    List<EstoqueEntity> findByNomeContainingIgnoreCaseOrSkuIgnoreCase(String nome, String sku);
 }

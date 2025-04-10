@@ -1,9 +1,11 @@
 package br.com.postechfiap.fiap_estoque_service.controllers;
 
+import br.com.postechfiap.fiap_estoque_service.dto.AtualizarEstoqueDto;
 import br.com.postechfiap.fiap_estoque_service.dto.EstoqueRequest;
 import br.com.postechfiap.fiap_estoque_service.dto.EstoqueResponse;
 import br.com.postechfiap.fiap_estoque_service.dto.ListaEstoqueResponse;
 import br.com.postechfiap.fiap_estoque_service.interfaces.EstoqueRepository;
+import br.com.postechfiap.fiap_estoque_service.interfaces.usecases.AtualizarEstoqueUseCase;
 import br.com.postechfiap.fiap_estoque_service.interfaces.usecases.BuscarEstoqueUseCase;
 import br.com.postechfiap.fiap_estoque_service.interfaces.usecases.CadastrarEstoqueUseCase;
 import io.swagger.v3.oas.annotations.Operation;
@@ -27,6 +29,7 @@ public class EstoqueController {
 
     private final CadastrarEstoqueUseCase cadastrarEstoque;
     private final BuscarEstoqueUseCase buscarEstoque;
+    private final AtualizarEstoqueUseCase atualizarEstoque;
 
     // C
     @PostMapping
@@ -54,6 +57,14 @@ public class EstoqueController {
         return  ResponseEntity.ok(listaEstoque);
     }
     // U
+
+    @PutMapping("/{sku}")
+    @Operation(summary = "Atualiza o Estoque", description = "Atualiza o esto com a sku")
+    public ResponseEntity<EstoqueResponse> atualizarEstoque(@PathVariable String sku,
+                                                            @Valid @RequestBody EstoqueRequest estoqueRequest) {
+        var novoEstoque = atualizarEstoque.execute(new AtualizarEstoqueDto(sku, estoqueRequest));
+        return  ResponseEntity.ok(novoEstoque);
+    }
     // D
 
 }
