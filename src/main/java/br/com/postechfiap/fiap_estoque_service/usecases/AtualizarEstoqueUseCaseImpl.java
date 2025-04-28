@@ -18,8 +18,9 @@ public class AtualizarEstoqueUseCaseImpl implements AtualizarEstoqueUseCase {
         long i = 0;
 
 //        List<EstoqueResponse> estoques = estoqueRepository.findByNomeContainingIgnoreCase(entry);
-        var estoque= estoqueRepository.findBySku(entry.sku());
+        var estoque= estoqueRepository.findBySku(entry.sku()).get();
         estoque.setNome(entry.estoqueRequest().nome());
+        estoque.setSku(entry.estoqueRequest().sku());
         estoque.setQuantidade(entry.estoqueRequest().quantidade());
 
         estoque = estoqueRepository.save(estoque);
