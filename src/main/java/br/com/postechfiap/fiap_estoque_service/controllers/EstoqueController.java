@@ -1,14 +1,8 @@
 package br.com.postechfiap.fiap_estoque_service.controllers;
 
-import br.com.postechfiap.fiap_estoque_service.dto.AtualizarEstoqueDto;
-import br.com.postechfiap.fiap_estoque_service.dto.EstoqueRequest;
-import br.com.postechfiap.fiap_estoque_service.dto.EstoqueResponse;
-import br.com.postechfiap.fiap_estoque_service.dto.ListaEstoqueResponse;
+import br.com.postechfiap.fiap_estoque_service.dto.*;
 import br.com.postechfiap.fiap_estoque_service.interfaces.EstoqueRepository;
-import br.com.postechfiap.fiap_estoque_service.interfaces.usecases.AtualizarEstoqueUseCase;
-import br.com.postechfiap.fiap_estoque_service.interfaces.usecases.BuscarEstoqueUseCase;
-import br.com.postechfiap.fiap_estoque_service.interfaces.usecases.CadastrarEstoqueUseCase;
-import br.com.postechfiap.fiap_estoque_service.interfaces.usecases.DeletarEstoqueUseCase;
+import br.com.postechfiap.fiap_estoque_service.interfaces.usecases.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -31,6 +25,8 @@ public class EstoqueController {
     private final CadastrarEstoqueUseCase cadastrarEstoque;
     private final BuscarEstoqueUseCase buscarEstoque;
     private final AtualizarEstoqueUseCase atualizarEstoque;
+    private final ReduzirEstoqueUseCase reduzirEstoque;
+    private final AdicionarEstoqueUseCase adicionarEstoque;
     private final DeletarEstoqueUseCase deletarEstoque;
 
     // C
@@ -46,6 +42,7 @@ public class EstoqueController {
                 .toUri();
         return ResponseEntity.created(location).body(novoEstoque);
     }
+
     // R
     @GetMapping
     @Operation(summary = "Busca Estoque", description = "Busca Estoque por Nome")
@@ -58,15 +55,34 @@ public class EstoqueController {
 
         return  ResponseEntity.ok(listaEstoque);
     }
-    // U
 
+    // U
     @PutMapping("/{sku}")
     @Operation(summary = "Atualiza o Estoque", description = "Atualiza o esto com a sku")
     public ResponseEntity<EstoqueResponse> atualizarEstoque(@PathVariable String sku,
-                                                            @Valid @RequestBody EstoqueRequest estoqueRequest) {
+                                                            @Valid @RequestBody EstoqueRequest estoqueRequest
+    ) {
         var novoEstoque = atualizarEstoque.execute(new AtualizarEstoqueDto(sku, estoqueRequest));
         return  ResponseEntity.ok(novoEstoque);
     }
+
+    @PutMapping("/reduzir/{sku}")
+    @Operation(summary = "Reduzir o Estoque", description = "Reduzir o esto com a sku")
+    public  ResponseEntity<EstoqueResponse> reduzirEstoque(@PathVariable String sku,
+                                                           @Valid @RequestBody ReduzirEstoqueRequest reduzirEstoqueRequest) {
+        var novoEstoque = reduzirEstoque.execute(new ReduzirEstoqueDto(sku,reduzirEstoqueRequest));
+        return  ResponseEntity.ok(novoEstoque);
+    }
+
+
+    @PutMapping("/adicionar/{sku}")
+    @Operation(summary = "Adicionar o Estoque", description = "Adicionar o esto com a sku")
+    public  ResponseEntity<EstoqueResponse> reduzirEstoque(@PathVariable String sku,
+                                                           @Valid @RequestBody AdicionarEstoqueRequest adicionarEstoqueRequest) {
+        var novoEstoque = adicionarEstoque.execute(new AdicionarEstoqueDto(sku,adicionarEstoqueRequest));
+        return  ResponseEntity.ok(novoEstoque);
+    }
+
     // D
     @DeleteMapping("/{sku}")
     @Operation(summary = "Deleta um Estoque", description = "Deleta um item do estoque")

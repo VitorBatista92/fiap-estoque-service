@@ -31,11 +31,12 @@ public class AtualizarEstoqueUseCaseTest {
     void deveRealizarAtualizacaoEstoque() {
         // Arrange
         EstoqueEntity estoqueMock = new EstoqueEntity(1L,"Estoque 1", "SKU1", 0L);
-        AtualizarEstoqueDto atualizaEstoque = new AtualizarEstoqueDto("SKU1", new EstoqueRequest("Estoque 2", "SKU2", 10L));
+        AtualizarEstoqueDto atualizaEstoque = new AtualizarEstoqueDto("SKU1", new EstoqueRequest("Estoque 2", "SKU1", 10L));
 
+        when(estoqueRepository.findBySku("SKU1")).thenReturn(of(estoqueMock));
 
-        when(estoqueRepository.findBySku("SKU1").get()).thenReturn(estoqueMock);
         when(estoqueRepository.save(any(EstoqueEntity.class))).thenReturn(estoqueMock);
+
 
         //  Act
         EstoqueResponse response = atualizarEstoqueUseCase.execute(atualizaEstoque);
@@ -44,7 +45,7 @@ public class AtualizarEstoqueUseCaseTest {
         //  Assert (Validação)
         assertNotNull(response);
         assertEquals("Estoque 2", response.nome());
-        assertEquals("SKU2", response.sku());
+        assertEquals("SKU1", response.sku());
 
         verify(estoqueRepository, times(1)).save(estoqueMock);
     }
