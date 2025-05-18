@@ -1,12 +1,10 @@
 package br.com.postechfiap.fiap_estoque_service.usercase;
 
-import br.com.postechfiap.fiap_estoque_service.dto.AtualizarEstoqueDto;
-import br.com.postechfiap.fiap_estoque_service.dto.EstoqueRequest;
-import br.com.postechfiap.fiap_estoque_service.dto.EstoqueResponse;
+import br.com.postechfiap.fiap_estoque_service.dto.*;
 import br.com.postechfiap.fiap_estoque_service.entities.EstoqueEntity;
 import br.com.postechfiap.fiap_estoque_service.exceptions.estoque.EstoqueNotFoundException;
 import br.com.postechfiap.fiap_estoque_service.interfaces.EstoqueRepository;
-import br.com.postechfiap.fiap_estoque_service.usecases.AtualizarEstoqueUseCaseImpl;
+import br.com.postechfiap.fiap_estoque_service.usecases.AdicionarEstoqueUseCaseImpl;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -22,9 +20,9 @@ import static org.mockito.Mockito.*;
 
 @ActiveProfiles("test")
 @ExtendWith(MockitoExtension.class)
-public class AtualizarEstoqueUseCaseTest {
+public class AdicionarEstoqueUseCaseTest {
     @InjectMocks
-    private AtualizarEstoqueUseCaseImpl atualizarEstoqueUseCase;
+    private AdicionarEstoqueUseCaseImpl adicionarEstoqueUseCase;
     @Mock
     private EstoqueRepository estoqueRepository;
 
@@ -32,7 +30,7 @@ public class AtualizarEstoqueUseCaseTest {
     void deveRealizarAtualizacaoEstoque() {
         // Arrange
         EstoqueEntity estoqueMock = new EstoqueEntity(1L,"Estoque 1", "SKU1", 0L);
-        AtualizarEstoqueDto atualizaEstoque = new AtualizarEstoqueDto("SKU1", new EstoqueRequest("Estoque 2", "SKU1", 10L));
+        AdicionarEstoqueDto adicionarEstoqueDto = new AdicionarEstoqueDto("SKU1", new AdicionarEstoqueRequest("SKU1", 10L));
 
         when(estoqueRepository.findBySku("SKU1")).thenReturn(of(estoqueMock));
 
@@ -40,13 +38,14 @@ public class AtualizarEstoqueUseCaseTest {
 
 
         //  Act
-        EstoqueResponse response = atualizarEstoqueUseCase.execute(atualizaEstoque);
+        EstoqueResponse response = adicionarEstoqueUseCase.execute(adicionarEstoqueDto);
 
 
         //  Assert (Validação)
         assertNotNull(response);
-        assertEquals("Estoque 2", response.nome());
+        assertEquals("Estoque 1", response.nome());
         assertEquals("SKU1", response.sku());
+        assertEquals(10L, response.quantidade());
 
         verify(estoqueRepository, times(1)).save(estoqueMock);
     }
@@ -54,18 +53,18 @@ public class AtualizarEstoqueUseCaseTest {
     @Test
     void deveLancarExcecao_EstoqueNaoEncontrado() {
         // Arrange
-        AtualizarEstoqueDto atualizaEstoque = new AtualizarEstoqueDto("SKU2", new EstoqueRequest("Estoque 2", "SKU2", 10L));
+        AdicionarEstoqueDto adicionarEstoqueDto = new AdicionarEstoqueDto("SKU1", new AdicionarEstoqueRequest("SKU1", 10L));
 
-        when(estoqueRepository.findBySku("SKU2")).thenReturn(Optional.empty());
+        when(estoqueRepository.findBySku("SKU1")).thenReturn(Optional.empty());
 
         //  Act
         var exception = assertThrows(EstoqueNotFoundException.class,
-                () -> atualizarEstoqueUseCase.execute(atualizaEstoque));
+                () -> adicionarEstoqueUseCase.execute(adicionarEstoqueDto));
 
         //  Assert (Validação)
         assertNotNull(exception);
 
-        verify(estoqueRepository, times(1)).findBySku("SKU2");
+        verify(estoqueRepository, times(1)).findBySku("SKU1");
         verify(estoqueRepository, never()).save(any(EstoqueEntity.class));
     }
 

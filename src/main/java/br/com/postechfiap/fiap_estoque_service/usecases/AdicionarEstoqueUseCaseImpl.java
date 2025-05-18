@@ -3,6 +3,7 @@ package br.com.postechfiap.fiap_estoque_service.usecases;
 import br.com.postechfiap.fiap_estoque_service.dto.AdicionarEstoqueDto;
 import br.com.postechfiap.fiap_estoque_service.dto.EstoqueResponse;
 import br.com.postechfiap.fiap_estoque_service.dto.ReduzirEstoqueDto;
+import br.com.postechfiap.fiap_estoque_service.exceptions.estoque.EstoqueNotFoundException;
 import br.com.postechfiap.fiap_estoque_service.interfaces.EstoqueRepository;
 import br.com.postechfiap.fiap_estoque_service.interfaces.usecases.AdicionarEstoqueUseCase;
 import br.com.postechfiap.fiap_estoque_service.interfaces.usecases.ReduzirEstoqueUseCase;
@@ -18,7 +19,8 @@ public class AdicionarEstoqueUseCaseImpl implements AdicionarEstoqueUseCase {
     @Override
     public EstoqueResponse execute (AdicionarEstoqueDto entry){
 
-        var estoque = estoqueRepository.findBySku(entry.sku()).get();
+        var estoque = estoqueRepository.findBySku(entry.sku())
+                .orElseThrow(EstoqueNotFoundException::new);
 
         long quantidade= estoque.getQuantidade() + entry.adicionarEstoqueRequest().quantidade();
         estoque.setQuantidade(quantidade);

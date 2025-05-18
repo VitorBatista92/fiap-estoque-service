@@ -3,6 +3,7 @@ package br.com.postechfiap.fiap_estoque_service.usecases;
 import br.com.postechfiap.fiap_estoque_service.dto.AtualizarEstoqueDto;
 import br.com.postechfiap.fiap_estoque_service.dto.EstoqueResponse;
 import br.com.postechfiap.fiap_estoque_service.dto.ReduzirEstoqueDto;
+import br.com.postechfiap.fiap_estoque_service.exceptions.estoque.EstoqueNotFoundException;
 import br.com.postechfiap.fiap_estoque_service.interfaces.EstoqueRepository;
 import br.com.postechfiap.fiap_estoque_service.interfaces.usecases.ReduzirEstoqueUseCase;
 import lombok.RequiredArgsConstructor;
@@ -17,8 +18,8 @@ public class ReduzirEstoqueUseCaseImpl implements ReduzirEstoqueUseCase {
     @Override
     public EstoqueResponse execute (ReduzirEstoqueDto entry){
 
-        var estoque = estoqueRepository.findBySku(entry.sku()).get();
-
+        var estoque = estoqueRepository.findBySku(entry.sku())
+                .orElseThrow(EstoqueNotFoundException::new);
         long quantidade= estoque.getQuantidade() - entry.reduzirEstoqueRequest().quantidade();
         estoque.setQuantidade(quantidade);
 

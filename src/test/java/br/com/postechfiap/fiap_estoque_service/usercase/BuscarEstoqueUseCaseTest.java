@@ -1,7 +1,10 @@
 package br.com.postechfiap.fiap_estoque_service.usercase;
 
+import br.com.postechfiap.fiap_estoque_service.dto.AtualizarEstoqueDto;
+import br.com.postechfiap.fiap_estoque_service.dto.EstoqueRequest;
 import br.com.postechfiap.fiap_estoque_service.dto.ListaEstoqueResponse;
 import br.com.postechfiap.fiap_estoque_service.entities.EstoqueEntity;
+import br.com.postechfiap.fiap_estoque_service.exceptions.estoque.EstoqueNotFoundException;
 import br.com.postechfiap.fiap_estoque_service.interfaces.EstoqueRepository;
 import br.com.postechfiap.fiap_estoque_service.usecases.BuscarEstoqueUseCaseImpl;
 import org.junit.jupiter.api.Test;
@@ -11,7 +14,9 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.context.ActiveProfiles;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -50,5 +55,21 @@ public class BuscarEstoqueUseCaseTest {
 
         // Garantir
         verify(estoqueRepository,times(1)).findByNomeContainingIgnoreCaseOrSkuIgnoreCase(query,query);
+    }
+
+
+    @Test
+    void deveLancarExcecao_EstoqueNaoEncontrado() {
+        // Arrange
+        when(estoqueRepository.findByNomeContainingIgnoreCaseOrSkuIgnoreCase( anyString(),anyString())).thenReturn(Collections.emptyList());
+
+        //  Act
+        var response = buscarEstoqueUseCase.execute("SKU2");
+
+        //  Assert (Validação)
+        assertNotNull(response);
+        assertTrue(response.estoques().isEmpty());
+
+        verify(estoqueRepository, times(1)).findByNomeContainingIgnoreCaseOrSkuIgnoreCase(anyString(),anyString());
     }
 }
