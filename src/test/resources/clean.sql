@@ -1,0 +1,2 @@
+DROP TABLE IF EXISTS estoque;
+DROP SEQUENCE IF EXISTS estoque_id_seq;

@@ -54,7 +54,7 @@ public class DeletarEstoqueUseCaseTest {
         var exception = assertThrows(RuntimeException.class,
                 () -> deletarEstoqueUseCase.execute(SKU));
 
-        assertEquals("Estoque não encontrado o.", exception.getMessage());
+        assertEquals("Estoque não encontrado.", exception.getMessage());
 
         verify(estoqueRepository, times(1)).findBySku(SKU);
         verify(estoqueRepository, never()).delete(any(EstoqueEntity.class));

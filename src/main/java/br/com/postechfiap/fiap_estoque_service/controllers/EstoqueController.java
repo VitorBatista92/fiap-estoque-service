@@ -47,7 +47,7 @@ public class EstoqueController {
     @GetMapping
     @Operation(summary = "Busca Estoque", description = "Busca Estoque por Nome")
     public ResponseEntity<ListaEstoqueResponse> buscarEstoque(@RequestParam String nome) {
-        if(nome == null && nome.trim().isEmpty()){
+        if(nome == null || nome.trim().isEmpty()){
             throw new IllegalArgumentException("O parametro de busca não pode ser vazio");
         }
 
